@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reba Umenye – Scanner y’Ikinyarwanda</title>
+<style>
+:root{--blue:#00A1DE;--yellow:#FAD201;--green:#20603D;--bg:#07121a;--card:rgba(10,24,34,.82);--fg:#f3f8fb;--mut:#9fb4c2;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root{--bg:#07121a;--card:rgba(10,24,34,.82);--fg:#f3f8fb;--mut:#9fb4c2}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;overflow:hidden}
+body{background:var(--bg);color:var(--fg);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.app{position:relative;height:100%}
+video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,transparent 22%,transparent 50%,rgba(0,0,0,.75) 100%)}
+.top{position:absolute;top:0;left:0;right:0;padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px}
+.flag{display:flex;flex-direction:column;width:6px;height:26px;border-radius:3px;overflow:hidden}
+.flag i{flex:1}.flag i:nth-child(1){background:var(--blue)}.flag i:nth-child(2){background:var(--yellow)}.flag i:nth-child(3){background:var(--green)}
+.pill{display:flex;align-items:center;gap:8px;background:var(--card);backdrop-filter:blur(10px);padding:7px 13px;border-radius:30px;font-size:13px;color:var(--mut)}
+.dot{width:8px;height:8px;border-radius:50%;background:#3ddc84;box-shadow:0 0 0 0 rgba(61,220,132,.7);animation:pulse 1.6s infinite}
+.dot.busy{background:var(--yellow);animation:none}
+@keyframes pulse{70%{box-shadow:0 0 0 8px rgba(61,220,132,0)}100%{box-shadow:0 0 0 0 rgba(61,220,132,0)}}
+.reticle{position:absolute;left:50%;top:38%;width:min(68vw,300px);aspect-ratio:1;transform:translate(-50%,-50%)}
+.reticle b{position:absolute;width:34px;height:34px;border:4px solid var(--yellow);transition:.3s}
+.reticle b:nth-child(1){top:0;left:0;border-right:0;border-bottom:0;border-radius:14px 0 0 0}
+.reticle b:nth-child(2){top:0;right:0;border-left:0;border-bottom:0;border-radius:0 14px 0 0}
+.reticle b:nth-child(3){bottom:0;left:0;border-right:0;border-top:0;border-radius:0 0 0 14px}
+.reticle b:nth-child(4){bottom:0;right:0;border-left:0;border-top:0;border-radius:0 0 14px 0}
+.reticle.ok b{border-color:#3ddc84}
+.line{position:absolute;left:6%;right:6%;height:3px;border-radius:3px;background:linear-gradient(90deg,transparent,var(--blue),transparent);box-shadow:0 0 14px var(--blue);opacity:0;top:0}
+.reticle.scan .line{opacity:1;animation:sweep 1.4s ease-in-out infinite alternate}
+@keyframes sweep{to{top:97%}}
+.sheet{position:absolute;left:0;right:0;bottom:0;padding:0 14px 16px}
+.hist{display:flex;gap:8px;overflow-x:auto;padding:0 2px 10px;scrollbar-width:none}
+.hist::-webkit-scrollbar{display:none}
+.chip{flex:none;background:var(--card);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.12);color:var(--fg);padding:8px 14px;border-radius:22px;font-size:14px;font-weight:600}
+.card{background:var(--card);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);border-radius:26px;padding:18px 18px 16px;text-align:center}
+.tag{font-size:12px;letter-spacing:1.6px;text-transform:uppercase;color:var(--yellow);font-weight:700}
+.rw{font-size:clamp(32px,10vw,46px);font-weight:800;margin:4px 0 0;line-height:1.1;min-height:1.1em;word-break:break-word}
+.en{color:var(--mut);margin:6px 0 16px;font-size:16px;min-height:1.3em}
+.row{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:10px}
+button{font:inherit;border:0;border-radius:16px;padding:14px 8px;font-weight:700;font-size:15px;color:var(--fg);background:rgba(255,255,255,.1)}
+button:active{transform:scale(.97)}
+button.main{background:linear-gradient(135deg,var(--blue),#0077b6);color:#fff;font-size:16px}
+button.on{outline:2px solid var(--yellow)}
+.ov{position:absolute;inset:0;z-index:20;background:radial-gradient(circle at 50% 30%,#10344a,var(--bg) 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:32px;text-align:center}
+.logo{width:92px;height:92px;border-radius:28px;display:grid;place-items:center;font-size:44px;background:linear-gradient(160deg,var(--blue) 0 34%,var(--yellow) 34% 67%,var(--green) 67%);box-shadow:0 14px 40px rgba(0,161,222,.35)}
+.ov h1{margin:6px 0 0;font-size:30px}.ov p{margin:0;color:var(--mut);max-width:330px;line-height:1.5}
+.er{color:var(--yellow)!important;min-height:1.2em}
+.ov button.main{padding:16px 34px;font-size:17px;margin-top:6px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"></script>
+</head>
+<body>
+<div class="app">
+  <video id="v" playsinline muted autoplay></video>
+  <div class="shade"></div>
+  <div class="top">
+    <div class="brand"><div class="flag"><i></i><i></i><i></i></div>Reba Umenye</div>
+    <div class="pill"><span class="dot" id="dot"></span><span id="st">Ihagaze</span></div>
+  </div>
+  <div class="reticle" id="ret"><b></b><b></b><b></b><b></b><div class="line"></div></div>
+  <div class="sheet">
+    <div class="hist" id="hist"></div>
+    <div class="card">
+      <div class="tag">Mu Kinyarwanda</div>
+      <p class="rw" id="rw">Ndakureba…</p>
+      <p class="en" id="en">Erekeza camera ku kintu</p>
+      <div class="row">
+        <button id="say">🔊 Umva</button>
+        <button class="main" id="scan">Scan</button>
+        <button id="auto" class="on">Auto</button>
+      </div>
+    </div>
+  </div>
+  <div class="ov" id="ov" style="display:none">
+    <div class="logo">📷</div>
+    <h1>Reba Umenye</h1>
+    <p>Erekeza camera ku kintu cyose, ukimenye mu Kinyarwanda ako kanya, ukacyumva kivugwa.</p>
+    <p class="er" id="er"></p>
+    <button class="main" id="allow">Emerera camera</button>
+  </div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const v=$('v');
+const RW={"person":"umuntu","bicycle":"igare","car":"imodoka","motorcycle":"moto","airplane":"indege","bus":"bisi","train":"gari ya moshi","truck":"ikamyo","boat":"ubwato","traffic light":"amatara yo mu muhanda","stop sign":"ikimenyetso cyo guhagarara","bench":"intebe ndende","bird":"inyoni","cat":"injangwe","dog":"imbwa","horse":"ifarashi","sheep":"intama","cow":"inka","elephant":"inzovu","bear":"idubu","zebra":"pundamilia","giraffe":"twiga","backpack":"igikapu cyo mu mugongo","umbrella":"umutaka","handbag":"agakapu","tie":"karuvati","suitcase":"ivalisi","sports ball":"umupira","bottle":"icupa","wine glass":"ikirahuri","cup":"igikombe","fork":"ifuruseti","knife":"icyuma","spoon":"ikiyiko","bowl":"igisorori","banana":"igitoki","apple":"pome","orange":"icunga","carrot":"karoti","pizza":"pizza","cake":"keke","chair":"intebe","couch":"sofa","potted plant":"igihingwa cyo mu kibindi","bed":"igitanda","dining table":"ameza","toilet":"ubwiherero","tv":"televiziyo","laptop":"mudasobwa","mouse":"imbeba ya mudasobwa","remote":"telekomande","keyboard":"clavier","cell phone":"telefone","microwave":"microwave","oven":"ifuru","sink":"ibesini","refrigerator":"frigo","book":"igitabo","clock":"isaha","vase":"ikibindi","scissors":"umukasi","teddy bear":"igipupe cy’idubu","toothbrush":"uburoso bw’amenyo","hair drier":"icyuma cyumutsa umusatsi"};
+let model=null,busy=false,auto=true,last='',cand='',streak=0,voices=[],hist=[];
+
+function loadVoices(){voices=speechSynthesis.getVoices()}
+if('speechSynthesis' in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+function speak(t){
+  if(!('speechSynthesis' in window)||!t)return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(t);
+  const vo=voices.find(x=>/^rw/i.test(x.lang))||voices.find(x=>/^(sw|fr)/i.test(x.lang));
+  if(vo){u.voice=vo;u.lang=vo.lang}else u.lang='rw-RW';
+  u.rate=.85;speechSynthesis.speak(u);
+}
+function status(t,b){$('st').textContent=t;$('dot').classList.toggle('busy',!!b)}
+
+async function start(){
+  try{
+    const s=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});
+    v.srcObject=s;await v.play();$('ov').style.display='none';
+  }catch(e){
+    $('ov').style.display='flex';
+    $('er').textContent='Camera ntifunguye. Emerera camera mu bikoresho bya browser, kandi urupapuro rugomba gufungurwa kuri https.';
+    $('allow').textContent='Ongera ugerageze';return;
+  }
+  status('Ntegura model…',true);
+  try{
+    if(typeof cocoSsd==='undefined')throw 0;
+    model=await cocoSsd.load({base:'lite_mobilenet_v2'});
+  }catch(e){status('Model ntibonetse (shaka internet)');return}
+  status('Ikora');loop();
+}
+function addHist(rw,en){
+  hist=hist.filter(h=>h.rw!==rw);hist.unshift({rw,en});hist=hist.slice(0,8);
+  const box=$('hist');box.innerHTML='';
+  hist.forEach(h=>{const b=document.createElement('button');b.className='chip';b.textContent=h.rw;
+    b.onclick=()=>{$('rw').textContent=h.rw;$('en').textContent=h.en;speak(h.rw)};box.appendChild(b)});
+}
+async function scan(force){
+  if(busy||!model||!v.videoWidth)return;
+  busy=true;$('ret').classList.add('scan');
+  try{
+    const p=(await model.detect(v,5,0.5))[0];
+    if(p){
+      const en=p.class,rw=RW[en]||en;
+      streak=en===cand?streak+1:1;cand=en;
+      $('rw').textContent=rw;$('en').textContent=en;$('ret').classList.add('ok');
+      if((streak>=2&&en!==last)||force){last=en;speak(rw);addHist(rw,en);if(navigator.vibrate)navigator.vibrate(40)}
+    }else{streak=0;cand='';$('ret').classList.remove('ok')}
+  }catch(e){status('Habaye ikibazo')}
+  $('ret').classList.remove('scan');busy=false;
+}
+async function loop(){while(true){if(auto)await scan();await new Promise(r=>setTimeout(r,500))}}
+$('scan').onclick=()=>scan(true);
+$('say').onclick=()=>speak($('rw').textContent);
+$('auto').onclick=()=>{auto=!auto;$('auto').classList.toggle('on',auto)};
+$('allow').onclick=start;
+start();
+</script>
+</body>
+</html>
